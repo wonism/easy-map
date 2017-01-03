@@ -1,0 +1,41 @@
+{
+  "name": "easy-map",
+  "version": "1.0.0",
+  "description": "This is a open source project to represent map in your web page easily.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "node_modules/.bin/eslint src/**/*.js || true",
+    "demo": "webpack-dev-server --hot --host 0.0.0.0",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wonism/easy-map.git"
+  },
+  "keywords": [
+    "google-maps",
+    "maps",
+    "map"
+  ],
+  "author": "Jaewon <yocee57@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wonism/easy-map/issues"
+  },
+  "homepage": "https://github.com/wonism/easy-map#readme",
+  "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "eslint": "^3.12.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-eslint": "^3.0.1",
+    "gulp-uglify": "^2.0.0",
+    "jest-cli": "^18.1.0",
+    "webpack": "^1.14.0",
+    "webpack-dev-server": "^1.16.2"
+  }
+}
