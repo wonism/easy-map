@@ -1,5 +1,5 @@
 # easy-map
-> Render a map on browser easily.
+> 🌏 Render a map on browser easily.
 
 ## installation
 Just download the `js` and include it in your `HTML`.
@@ -62,6 +62,44 @@ $ npm run demo
 | ===                           | ===      | === |
 | coords[n].infoWindow.content  | string   | If you write {{distance m}}, you can get the distance between coores[n] and source<br />Available unites : [`m`, `km`, `ft`, `yd`] |
 
+### Basic Usage
+```js
+const easyMap = new EasyMap({
+  mapType: 'google',
+  key: 'AIzaSyBL4Ugej1KvkfIrU2qOhoAkE85rKEcTApo',
+  element: document.getElementById('map'),
+  source: {
+    lat: 37.5666103,
+    lng: 126.9783882,
+    marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 48, height: 48, verticalAlign: 'top' },
+    infoWindow: { content: '<div class="info-window">Source Marker</div>', maxWidth: 50 }
+  },
+  coords: [
+    {
+      lat: 37.5658528,
+      lng: 126.9779845,
+      name: 'Marker 1',
+      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+      infoWindow: { content: '<div class="info-window">Marker 1<br>distance is {{distance m}}</div>', maxWidth: 50 }
+    },
+    {
+      lat: 37.5658528,
+      lng: 126.9779845,
+      name: 'Marker 2',
+      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+      infoWindow: { content: '<div class="info-window">Marker 2<br>distance is {{distance km}}</div>', maxWidth: 50 }
+    },
+  ],
+  closeInfoWindowAuto: true,
+  clickedNestedMarker: function (cb, ids, strs) {
+    let userInput = prompt(`You clicked nested markers! Select on.\n${ strs }`, '');
+
+    cb(+userInput);
+  },
+});
+
+easyMap.start();
+```
 
 ## Browsers support
 __Google Maps__
