@@ -2,7 +2,7 @@
  *
  * title   : Easy Map JS
  *
- * version : 1.0.0
+ * version : 1.0.1
  *
  * author  : Jaewon <yocee57@gmail.com>
  *
@@ -18,9 +18,9 @@ const UnsupportedBrowser = window.navigator.userAgent.match(/(msie [4-8]|opera m
 
 class EasyMap {
   constructor(obj) {
-    this.version = '1.0.0';
+    this.version = '1.0.1';
 
-    this.availableMaps = ['google'];
+    this.availableMaps = ['google', 'naver'];
 
     this.map = {};
 
@@ -107,6 +107,10 @@ class EasyMap {
     return new google.maps.Map(this.element, option);
   }
 
+  initNaverOption(option) {
+    return new naver.maps.Map(this.element, option);
+  }
+
   markCurrentPosition() {
     const marker = this.source.marker;
     const infoWindow = this.source.infoWindow;
@@ -159,6 +163,31 @@ class EasyMap {
           });
         }
         break;
+      case 'naver':
+        if (useSizeOption) {
+          this.sourceMarker = new naver.maps.Marker({
+            position: this.source,
+            map: this.map,
+            icon: {
+              url: this.source.marker.icon,
+              size: new naver.maps.Size(width, height),
+              scaledSize: new naver.maps.Size(width, height),
+              origin: new naver.maps.Point(0, 0),
+              anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
+            },
+          });
+        } else {
+          this.sourceMarker = new naver.maps.Marker({
+            position: this.source,
+            map: this.map,
+            icon: {
+              url: this.source.marker.icon,
+            },
+          });
+        }
+        break;
+      default:
+        break;
       }
     } else {
       switch (this.mapType) {
@@ -168,15 +197,29 @@ class EasyMap {
           map: this.map,
         });
         break;
+      case 'naver':
+        this.sourceMarker = null;
+        break;
+      default:
+        break;
       }
     }
 
     if (infoWindow) {
+      let infoWindowContent;
+
       switch (this.mapType) {
       case 'google':
-        const infoWindowContent = (infoWindow && infoWindow.content) || '';
+        infoWindowContent = (infoWindow && infoWindow.content) || '';
 
-        this.sourceInfoWindow = new google.maps.InfoWindow({ content: infoWindowContent, maxWidth: infoWindow.maxWidth });
+        this.sourceInfoWindow = new google.maps.InfoWindow({ content: infoWindowContent, ...infoWindow, });
+        break;
+      case 'naver':
+        infoWindowContent = (infoWindow && infoWindow.content) || '';
+
+        this.sourceInfoWindow = new naver.maps.InfoWindow({ content: infoWindowContent, ...infoWindow, });
+        break;
+      default:
         break;
       }
     }
@@ -248,7 +291,7 @@ class EasyMap {
               ),
             });
           } else {
-            this.sourceMarker = new google.maps.Marker({
+            this.coordsMarkers[i] = new google.maps.Marker({
               position: coord,
               map: this.map,
               icon: new google.maps.MarkerImage(
@@ -257,12 +300,49 @@ class EasyMap {
             });
           }
           break;
+        case 'naver':
+          if (useSizeOption) {
+            this.coordsMarkers[i] = new naver.maps.Marker({
+              position: coord,
+              map: this.map,
+              icon: {
+                url: coord.marker.icon,
+                size: new naver.maps.Size(width, height),
+                scaledSize: new naver.maps.Size(width, height),
+                origin: new naver.maps.Point(0, 0),
+                anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
+              },
+            });
+          } else {
+            this.coordsMarkers[i] = new naver.maps.Marker({
+              position: coord,
+              map: this.map,
+              icon: {
+                url: coord.marker.icon,
+              },
+            });
+          }
+          break;
+        default:
+          break;
         }
       } else {
-        this.coordsMarkers[i] = new google.maps.Marker({
-          position: coord,
-          map: this.map,
-        });
+        switch (this.mapType) {
+        case 'google':
+          this.coordsMarkers[i] = new google.maps.Marker({
+            position: coord,
+            map: this.map,
+          });
+          break;
+        case 'naver':
+          this.coordsMarkers[i] = new naver.maps.Marker({
+            position: coord,
+            map: this.map,
+          });
+          break;
+        default:
+          break;
+        }
       }
 
       this.coordsMarkers[i].__id = i;
@@ -280,7 +360,12 @@ class EasyMap {
 
         switch (this.mapType) {
         case 'google':
-          this.coordsInfoWindows[i] = new google.maps.InfoWindow({ content: infoWindowContent, maxWidth: infoWindow.maxWidth });
+          this.coordsInfoWindows[i] = new google.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+          break;
+        case 'naver':
+          this.coordsInfoWindows[i] = new naver.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+          break;
+        default:
           break;
         }
       }
@@ -311,63 +396,141 @@ class EasyMap {
           zoomControl: true,
           scaleControl: true,
         });
+
         this.renderMap();
       };
 
-      document.body.appendChild(script);
+      break;
+    case 'naver':
+      script.src = `//openapi.map.naver.com/openapi/v3/maps.js?clientId=${ this.key }`;
+      script.onload = () => {
+        this.map = this.initNaverOption(this.option || {
+          center: this.source,
+          zoom: 10,
+        });
+
+        this.renderMap();
+      };
+      break;
+    default:
       break;
     }
+
+    document.body.appendChild(script);
   }
 
   subscribeInfoWindow() {
     const that = this;
 
-    google.maps.event.addListener(this.sourceMarker, 'click', function () {
-      that.map.setCenter(this.getPosition());
+    switch (this.mapType) {
+    case 'google':
+      google.maps.event.addListener(this.sourceMarker, 'click', function () {
+        that.map.setCenter(this.getPosition());
 
-      if (that.closeInfoWindowAuto) {
-        for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
-          that.coordsInfoWindows[i].close();
-        }
-      }
-
-      that.sourceInfoWindow.open(that.map, this);
-    });
-
-    for (let i = 0, len = this.coords.length; i < len; i++) {
-      google.maps.event.addListener(that.coordsMarkers[i], 'click', function () {
-        const tempCoordsArr = [];
-
-        for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
-          if (this.getPosition().lat() === that.coordsMarkers[j].position.lat() && this.getPosition().lng() === that.coordsMarkers[j].position.lng()) {
-            tempCoordsArr.push(that.coordsMarkers[j]);
+        if (that.closeInfoWindowAuto) {
+          for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
+            that.coordsInfoWindows[i].close();
           }
         }
 
-        if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
-          that.map.setCenter(this.getPosition());
+        that.sourceInfoWindow.open(that.map, this);
+      });
 
-          if (that.closeInfoWindowAuto) {
-            that.sourceInfoWindow.close();
+      for (let i = 0, len = this.coords.length; i < len; i++) {
+        google.maps.event.addListener(that.coordsMarkers[i], 'click', function () {
+          const tempCoordsArr = [];
 
-            for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
-              that.coordsInfoWindows[j].close();
+          for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
+            if (this.getPosition().lat() === that.coordsMarkers[j].position.lat() && this.getPosition().lng() === that.coordsMarkers[j].position.lng()) {
+              tempCoordsArr.push(that.coordsMarkers[j]);
             }
           }
 
-          that.coordsInfoWindows[that.coordsMarkers[i].__id].open(that.map, this);
-        } else {
-          that.markerNames.length = 0;
-          that.markerIds.length = 0;
+          if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
+            that.map.setCenter(this.getPosition());
 
-          for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
-            that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
-            that.markerIds.push(tempCoordsArr[j].__id);
+            if (that.closeInfoWindowAuto) {
+              that.sourceInfoWindow.close();
+
+              for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
+                that.coordsInfoWindows[j].close();
+              }
+            }
+
+            that.coordsInfoWindows[that.coordsMarkers[i].__id].open(that.map, this);
+          } else {
+            that.markerNames.length = 0;
+            that.markerIds.length = 0;
+
+            for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
+              that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
+              that.markerIds.push(tempCoordsArr[j].__id);
+            }
+
+            that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
           }
+        });
+      }
+      break;
+    case 'naver':
+      naver.maps.Event.addListener(this.sourceMarker, 'click', function () {
+        that.map.setCenter(that.sourceMarker.position);
 
-          that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
+        if (that.sourceInfoWindow.getMap()) {
+          that.sourceInfoWindow.close();
+        } else {
+          that.sourceInfoWindow.open(that.map, that.sourceMarker);
+        }
+
+        if (that.closeInfoWindowAuto) {
+          for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
+            that.coordsInfoWindows[i].close();
+          }
         }
       });
+
+      for (let i = 0, len = this.coords.length; i < len; i++) {
+        naver.maps.Event.addListener(that.coordsMarkers[i], 'click', function () {
+          const tempCoordsArr = [];
+
+          for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
+            if (that.coordsMarkers[i].position._lat === that.coordsMarkers[j].position._lat && that.coordsMarkers[i].position._lng === that.coordsMarkers[j].position._lng) {
+              tempCoordsArr.push(that.coordsMarkers[j]);
+            }
+          }
+
+          if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
+            if (that.closeInfoWindowAuto) {
+              that.sourceInfoWindow.close();
+
+              for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
+                that.coordsInfoWindows[j].close();
+              }
+            }
+
+            if (that.coordsInfoWindows[i].getMap()) {
+              that.coordsInfoWindows[i].close();
+            } else {
+              that.coordsInfoWindows[i].open(that.map, that.coordsMarkers[i]);
+            }
+
+            that.map.setCenter(that.coordsInfoWindows[i].position);
+          } else {
+            that.markerNames.length = 0;
+            that.markerIds.length = 0;
+
+            for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
+              that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
+              that.markerIds.push(tempCoordsArr[j].__id);
+            }
+
+            that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
+          }
+        });
+      }
+      break;
+    default:
+      break;
     }
   }
 }

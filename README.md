@@ -38,29 +38,35 @@ $ npm run demo
   - You can get the key on [Google maps API page](https://developers.google.com/maps/web)
 
 ### Parameters
-| Parameter                     | Type     | Remarks |
-|:------------------------------|:---------|:--------|
-| mapType                       | string   | Required (It must be included in `['google']`) |
-| element                       | DOM Node | Required |
-| key                           | string   | Required |
-| source                        | object   | Specific location's information |
-| source.lat                    | number   | Specific location's latitude |
-| source.lng                    | number   | Specific location's longitude |
-| source.marker                 | object   | Marker on Specific location |
-| source.marker.icon            | string   | Write icon image's path |
-| source.marker.width           | number   | Marker's width (px) |
-| source.marker.height          | number   | Marker's height (px) |
-| source.marker.verticalAlign   | string   | `top, bottom, middle` |
-| source.marker.horizontalAlign | string   | `right, left, center` |
-| source.infoWindow             | Object   | Marker's infoWindow |
-| source.infoWindow.content     | string   | infoWindow's content |
-| source.infoWindow.maxWidth    | number   | infoWindow's max width (px) |
-| coords                        | Array    | Set of coordinates |
-| coords[n]                     | Object   | Same as source |
-| closeInfoWindowAuto           | boolean  | Close automately when click a marker |
-| clickedNestedMarker           | function | Callback function when click nested markers |
-| ===                           | ===      | === |
-| coords[n].infoWindow.content  | string   | If you write {{distance m}}, you can get the distance between coores[n] and source<br />Available unites : [`m`, `km`, `ft`, `yd`] |
+| Parameter                         | Type     | Remarks |
+|:----------------------------------|:---------|:--------|
+| mapType                           | string   | Required (It must be included in `['google']`) |
+| element                           | DOM Node | Required |
+| key                               | string   | Required |
+| source                            | object   | Specific location's information |
+| source.lat                        | number   | Specific location's latitude |
+| source.lng                        | number   | Specific location's longitude |
+| source.marker                     | object   | Marker on Specific location |
+| source.marker.icon                | string   | Write icon image's path |
+| source.marker.width               | number   | Marker's width (px) |
+| source.marker.height              | number   | Marker's height (px) |
+| source.marker.verticalAlign       | string   | `top, bottom, middle` |
+| source.marker.horizontalAlign     | string   | `right, left, center` |
+| source.infoWindow                 | object   | Marker's infoWindow |
+| source.infoWindow.content         | string   | infoWindow's content |
+| source.infoWindow.maxWidth        | number   | infoWindow's max width (px) |
+| source.infoWindow.backgroundColor | string   | infoWindow's background color (`hex code` or `color name`)<br />*ONLY FOR NAVER* |
+| source.infoWindow.borderColor     | string   | infoWindow's border color (`hex code` or `color name`)<br />*ONLY FOR NAVER* |
+| source.infoWindow.borderWidth     | number   | infoWindow's border width (px)<br />*ONLY FOR NAVER* |
+| source.infoWindow.anchorSize      | object   | infoWindow's anchor width<br />`new naver.maps.Size(30, 30)`<br />*ONLY FOR NAVER* |
+| source.infoWindow.anchorSkew      | boolean  | infoWindow's anchor shape<br />*ONLY FOR NAVER* |
+| source.infoWindow.pixelOffset     | object   | infoWindow's offset<br />`new naver.maps.Point(20, -20)`<br />*ONLY FOR NAVER* |
+| coords                            | array    | Set of coordinates |
+| coords[n]                         | object   | Same as source |
+| closeInfoWindowAuto               | boolean  | Close automately when click a marker |
+| clickedNestedMarker               | function | Callback function when click nested markers |
+| ===                               | ===      | === |
+| coords[n].infoWindow.content      | string   | If you write {{distance m}}, you can get the distance between coores[n] and source<br />Available unites : [`m`, `km`, `ft`, `yd`] |
 
 ### Basic Usage
 ```js
@@ -105,9 +111,16 @@ easyMap.start();
 __Google Maps__
 - [Link](https://developers.google.com/maps/documentation/javascript/browsersupport?hl=en)
 
+__Naver Maps__
+- [Link](https://navermaps.github.io/maps.js/)
+
 ## Change log
 __1.0.0__
 - Initial release
+
+__1.0.1__
+- Add naver map
+- Bug fix
 
 ## Licence
 Copyright (c) 2017 wonism
