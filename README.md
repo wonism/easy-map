@@ -158,7 +158,7 @@ __Naver Maps__
 __1.0.0__
 - Initial release
 
-__1.0.1__
+__1.0.2__
 - Add naver map
 - Bug fix
 

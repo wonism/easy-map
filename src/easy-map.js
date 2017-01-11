@@ -2,7 +2,7 @@
  *
  * title   : Easy Map JS
  *
- * version : 1.0.1
+ * version : 1.0.2
  *
  * author  : Jaewon <yocee57@gmail.com>
  *
@@ -18,7 +18,7 @@ const UnsupportedBrowser = window.navigator.userAgent.match(/(msie [4-8]|opera m
 
 class EasyMap {
   constructor(obj) {
-    this.version = '1.0.1';
+    this.version = '1.0.2';
 
     this.availableMaps = ['google', 'naver'];
 
