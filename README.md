@@ -162,6 +162,10 @@ __1.0.2__
 - Add naver map
 - Bug fix
 
+__1.0.3__
+- Bug fix
+- Change coding styles in `switch-case` (Use braces in switch-case).
+
 ## Licence
 Copyright (c) 2017 wonism
 

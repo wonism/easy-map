@@ -94,7 +94,7 @@ const easyMapNaver = new EasyMap({
       lng: 126.9751461,
       name: 'Marker 3',
       marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle', },
-      infoWindow: { content: '<div class="info-window">Marker 3<br>distance is {{distance m}}</div>', maxWidth: 50, backgroundColor: '#00A3EB', },
+      infoWindow: { content: '<div class="info-window">Marker 3<br>distance is {{distance m}}</div>', maxWidth: 50, backgroundColor: '#00A3EB', anchorColor: '#00A3EB', },
     },
     {
       lat: 37.5658528,

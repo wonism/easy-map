@@ -2,7 +2,7 @@
  *
  * title   : Easy Map JS
  *
- * version : 1.0.2
+ * version : 1.0.3
  *
  * author  : Jaewon <yocee57@gmail.com>
  *
@@ -18,7 +18,7 @@ const UnsupportedBrowser = window.navigator.userAgent.match(/(msie [4-8]|opera m
 
 class EasyMap {
   constructor(obj) {
-    this.version = '1.0.2';
+    this.version = '1.0.3';
 
     this.availableMaps = ['google', 'naver'];
 
@@ -140,87 +140,95 @@ class EasyMap {
       }
 
       switch (this.mapType) {
-      case 'google':
-        if (useSizeOption) {
-          this.sourceMarker = new google.maps.Marker({
-            position: this.source,
-            map: this.map,
-            icon: new google.maps.MarkerImage(
-              this.source.marker.icon,
-              new google.maps.Size(width, height),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(markerPosition.x, markerPosition.y),
-              new google.maps.Size(width, height)
-            ),
-          });
-        } else {
-          this.sourceMarker = new google.maps.Marker({
-            position: this.source,
-            map: this.map,
-            icon: new google.maps.MarkerImage(
-              this.source.marker.icon
-            ),
-          });
+        case 'google': {
+          if (useSizeOption) {
+            this.sourceMarker = new google.maps.Marker({
+              position: this.source,
+              map: this.map,
+              icon: new google.maps.MarkerImage(
+                this.source.marker.icon,
+                new google.maps.Size(width, height),
+                new google.maps.Point(0, 0),
+                new google.maps.Point(markerPosition.x, markerPosition.y),
+                new google.maps.Size(width, height)
+              ),
+            });
+          } else {
+            this.sourceMarker = new google.maps.Marker({
+              position: this.source,
+              map: this.map,
+              icon: new google.maps.MarkerImage(
+                this.source.marker.icon
+              ),
+            });
+          }
+          break;
         }
-        break;
-      case 'naver':
-        if (useSizeOption) {
-          this.sourceMarker = new naver.maps.Marker({
-            position: this.source,
-            map: this.map,
-            icon: {
-              url: this.source.marker.icon,
-              size: new naver.maps.Size(width, height),
-              scaledSize: new naver.maps.Size(width, height),
-              origin: new naver.maps.Point(0, 0),
-              anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
-            },
-          });
-        } else {
-          this.sourceMarker = new naver.maps.Marker({
-            position: this.source,
-            map: this.map,
-            icon: {
-              url: this.source.marker.icon,
-            },
-          });
+        case 'naver': {
+          if (useSizeOption) {
+            this.sourceMarker = new naver.maps.Marker({
+              position: this.source,
+              map: this.map,
+              icon: {
+                url: this.source.marker.icon,
+                size: new naver.maps.Size(width, height),
+                scaledSize: new naver.maps.Size(width, height),
+                origin: new naver.maps.Point(0, 0),
+                anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
+              },
+            });
+          } else {
+            this.sourceMarker = new naver.maps.Marker({
+              position: this.source,
+              map: this.map,
+              icon: {
+                url: this.source.marker.icon,
+              },
+            });
+          }
+          break;
         }
-        break;
-      default:
-        break;
+        default: {
+          break;
+        }
       }
-    } else {
+    } else if (this.sourceMarker) {
       switch (this.mapType) {
-      case 'google':
-        this.sourceMarker = new google.maps.Marker({
-          position: this.source,
-          map: this.map,
-        });
-        break;
-      case 'naver':
-        this.sourceMarker = null;
-        break;
-      default:
-        break;
+        case 'google': {
+          this.sourceMarker = new google.maps.Marker({
+            position: this.source,
+            map: this.map,
+          });
+          break;
+        }
+        case 'naver': {
+          this.sourceMarker = new naver.maps.Marker({
+            position: this.source,
+            map: this.map,
+          });
+          break;
+        }
+        default: {
+          break;
+        }
       }
     }
 
     if (infoWindow) {
-      let infoWindowContent;
+      const infoWindowContent = (infoWindow && infoWindow.content) || '';
 
       switch (this.mapType) {
-      case 'google':
-        infoWindowContent = (infoWindow && infoWindow.content) || '';
-
-        this.sourceInfoWindow = new google.maps.InfoWindow({ content: infoWindowContent, ...infoWindow, });
-        break;
-      case 'naver':
-        infoWindowContent = (infoWindow && infoWindow.content) || '';
-
-        this.sourceInfoWindow = new naver.maps.InfoWindow({ content: infoWindowContent, ...infoWindow, });
-        break;
-      default:
-        break;
+        case 'google': {
+          this.sourceInfoWindow = new google.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+          break;
+        }
+        case 'naver': {
+          this.sourceInfoWindow = new naver.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+          break;
+        }
+        default: {
+          break;
+        }
       }
     }
   }
@@ -277,71 +285,77 @@ class EasyMap {
         }
 
         switch (this.mapType) {
-        case 'google':
-          if (useSizeOption) {
-            this.coordsMarkers[i] = new google.maps.Marker({
-              position: coord,
-              map: this.map,
-              icon: new google.maps.MarkerImage(
-                coord.marker.icon,
-                new google.maps.Size(width, height),
-                new google.maps.Point(0, 0),
-                new google.maps.Point(markerPosition.x, markerPosition.y),
-                new google.maps.Size(width, height)
-              ),
-            });
-          } else {
-            this.coordsMarkers[i] = new google.maps.Marker({
-              position: coord,
-              map: this.map,
-              icon: new google.maps.MarkerImage(
-                coord.marker.icon
-              ),
-            });
+          case 'google': {
+            if (useSizeOption) {
+              this.coordsMarkers[i] = new google.maps.Marker({
+                position: coord,
+                map: this.map,
+                icon: new google.maps.MarkerImage(
+                  coord.marker.icon,
+                  new google.maps.Size(width, height),
+                  new google.maps.Point(0, 0),
+                  new google.maps.Point(markerPosition.x, markerPosition.y),
+                  new google.maps.Size(width, height)
+                ),
+              });
+            } else {
+              this.coordsMarkers[i] = new google.maps.Marker({
+                position: coord,
+                map: this.map,
+                icon: new google.maps.MarkerImage(
+                  coord.marker.icon
+                ),
+              });
+            }
+            break;
           }
-          break;
-        case 'naver':
-          if (useSizeOption) {
-            this.coordsMarkers[i] = new naver.maps.Marker({
-              position: coord,
-              map: this.map,
-              icon: {
-                url: coord.marker.icon,
-                size: new naver.maps.Size(width, height),
-                scaledSize: new naver.maps.Size(width, height),
-                origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
-              },
-            });
-          } else {
-            this.coordsMarkers[i] = new naver.maps.Marker({
-              position: coord,
-              map: this.map,
-              icon: {
-                url: coord.marker.icon,
-              },
-            });
+          case 'naver': {
+            if (useSizeOption) {
+              this.coordsMarkers[i] = new naver.maps.Marker({
+                position: coord,
+                map: this.map,
+                icon: {
+                  url: coord.marker.icon,
+                  size: new naver.maps.Size(width, height),
+                  scaledSize: new naver.maps.Size(width, height),
+                  origin: new naver.maps.Point(0, 0),
+                  anchor: new naver.maps.Point(markerPosition.x, markerPosition.y),
+                },
+              });
+            } else {
+              this.coordsMarkers[i] = new naver.maps.Marker({
+                position: coord,
+                map: this.map,
+                icon: {
+                  url: coord.marker.icon,
+                },
+              });
+            }
+            break;
           }
-          break;
-        default:
-          break;
+          default: {
+            break;
+          }
         }
-      } else {
+      } else if (marker) {
         switch (this.mapType) {
-        case 'google':
-          this.coordsMarkers[i] = new google.maps.Marker({
-            position: coord,
-            map: this.map,
-          });
-          break;
-        case 'naver':
-          this.coordsMarkers[i] = new naver.maps.Marker({
-            position: coord,
-            map: this.map,
-          });
-          break;
-        default:
-          break;
+          case 'google': {
+            this.coordsMarkers[i] = new google.maps.Marker({
+              position: coord,
+              map: this.map,
+            });
+            break;
+          }
+          case 'naver': {
+            this.coordsMarkers[i] = new naver.maps.Marker({
+              position: coord,
+              map: this.map,
+            });
+            break;
+          }
+          default: {
+            break;
+          }
         }
       }
 
@@ -359,14 +373,17 @@ class EasyMap {
           .replace(/\{{2}distance\s?yd\}{2}/gi, `${ this.coordsMarkers[i].__distance / 0.9144 }yd`);
 
         switch (this.mapType) {
-        case 'google':
-          this.coordsInfoWindows[i] = new google.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
-          break;
-        case 'naver':
-          this.coordsInfoWindows[i] = new naver.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
-          break;
-        default:
-          break;
+          case 'google': {
+            this.coordsInfoWindows[i] = new google.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+            break;
+          }
+          case 'naver': {
+            this.coordsInfoWindows[i] = new naver.maps.InfoWindow({ ...infoWindow, content: infoWindowContent, });
+            break;
+          }
+          default: {
+            break;
+          }
         }
       }
     }
@@ -383,37 +400,40 @@ class EasyMap {
     script.type = 'text/javascript';
 
     switch(this.mapType) {
-    case 'google':
-      const timestamp = +new Date();
+      case 'google': {
+        const timestamp = +new Date();
 
-      script.src = `//maps.googleapis.com/maps/api/js?key=${ this.key }&callback=easyMap${ timestamp }&libraries=geometry`;
-      window[`easyMap${ timestamp }`] = () => {
-        this.map = this.initGoogleOption(this.option || {
-          center: this.source,
-          zoom: 14,
-          mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-          panControl: true,
-          zoomControl: true,
-          scaleControl: true,
-        });
+        script.src = `//maps.googleapis.com/maps/api/js?key=${ this.key }&callback=easyMap${ timestamp }&libraries=geometry`;
+        window[`easyMap${ timestamp }`] = () => {
+          this.map = this.initGoogleOption(this.option || {
+            center: this.source,
+            zoom: 14,
+            mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+            panControl: true,
+            zoomControl: true,
+            scaleControl: true,
+          });
 
-        this.renderMap();
-      };
+          this.renderMap();
+        };
 
-      break;
-    case 'naver':
-      script.src = `//openapi.map.naver.com/openapi/v3/maps.js?clientId=${ this.key }`;
-      script.onload = () => {
-        this.map = this.initNaverOption(this.option || {
-          center: this.source,
-          zoom: 10,
-        });
+        break;
+      }
+      case 'naver': {
+        script.src = `//openapi.map.naver.com/openapi/v3/maps.js?clientId=${ this.key }`;
+        script.onload = () => {
+          this.map = this.initNaverOption(this.option || {
+            center: this.source,
+            zoom: 10,
+          });
 
-        this.renderMap();
-      };
-      break;
-    default:
-      break;
+          this.renderMap();
+        };
+        break;
+      }
+      default: {
+        break;
+      }
     }
 
     document.body.appendChild(script);
@@ -423,114 +443,117 @@ class EasyMap {
     const that = this;
 
     switch (this.mapType) {
-    case 'google':
-      google.maps.event.addListener(this.sourceMarker, 'click', function () {
-        that.map.setCenter(this.getPosition());
+      case 'google': {
+        google.maps.event.addListener(this.sourceMarker, 'click', function () {
+          that.map.setCenter(this.getPosition());
 
-        if (that.closeInfoWindowAuto) {
-          for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
-            that.coordsInfoWindows[i].close();
-          }
-        }
-
-        that.sourceInfoWindow.open(that.map, this);
-      });
-
-      for (let i = 0, len = this.coords.length; i < len; i++) {
-        google.maps.event.addListener(that.coordsMarkers[i], 'click', function () {
-          const tempCoordsArr = [];
-
-          for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
-            if (this.getPosition().lat() === that.coordsMarkers[j].position.lat() && this.getPosition().lng() === that.coordsMarkers[j].position.lng()) {
-              tempCoordsArr.push(that.coordsMarkers[j]);
-            }
-          }
-
-          if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
-            that.map.setCenter(this.getPosition());
-
-            if (that.closeInfoWindowAuto) {
-              that.sourceInfoWindow.close();
-
-              for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
-                that.coordsInfoWindows[j].close();
-              }
-            }
-
-            that.coordsInfoWindows[that.coordsMarkers[i].__id].open(that.map, this);
-          } else {
-            that.markerNames.length = 0;
-            that.markerIds.length = 0;
-
-            for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
-              that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
-              that.markerIds.push(tempCoordsArr[j].__id);
-            }
-
-            that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
-          }
-        });
-      }
-      break;
-    case 'naver':
-      naver.maps.Event.addListener(this.sourceMarker, 'click', function () {
-        that.map.setCenter(that.sourceMarker.position);
-
-        if (that.sourceInfoWindow.getMap()) {
-          that.sourceInfoWindow.close();
-        } else {
-          that.sourceInfoWindow.open(that.map, that.sourceMarker);
-        }
-
-        if (that.closeInfoWindowAuto) {
-          for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
-            that.coordsInfoWindows[i].close();
-          }
-        }
-      });
-
-      for (let i = 0, len = this.coords.length; i < len; i++) {
-        naver.maps.Event.addListener(that.coordsMarkers[i], 'click', function () {
-          const tempCoordsArr = [];
-
-          for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
-            if (that.coordsMarkers[i].position._lat === that.coordsMarkers[j].position._lat && that.coordsMarkers[i].position._lng === that.coordsMarkers[j].position._lng) {
-              tempCoordsArr.push(that.coordsMarkers[j]);
-            }
-          }
-
-          if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
-            if (that.closeInfoWindowAuto) {
-              that.sourceInfoWindow.close();
-
-              for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
-                that.coordsInfoWindows[j].close();
-              }
-            }
-
-            if (that.coordsInfoWindows[i].getMap()) {
+          if (that.closeInfoWindowAuto) {
+            for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
               that.coordsInfoWindows[i].close();
+            }
+          }
+
+          that.sourceInfoWindow.open(that.map, this);
+        });
+
+        for (let i = 0, len = this.coords.length; i < len; i++) {
+          google.maps.event.addListener(that.coordsMarkers[i], 'click', function () {
+            const tempCoordsArr = [];
+
+            for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
+              if (this.getPosition().lat() === that.coordsMarkers[j].position.lat() && this.getPosition().lng() === that.coordsMarkers[j].position.lng()) {
+                tempCoordsArr.push(that.coordsMarkers[j]);
+              }
+            }
+
+            if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
+              that.map.setCenter(this.getPosition());
+
+              if (that.closeInfoWindowAuto) {
+                that.sourceInfoWindow.close();
+
+                for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
+                  that.coordsInfoWindows[j].close();
+                }
+              }
+
+              that.coordsInfoWindows[that.coordsMarkers[i].__id].open(that.map, this);
             } else {
-              that.coordsInfoWindows[i].open(that.map, that.coordsMarkers[i]);
-            }
+              that.markerNames.length = 0;
+              that.markerIds.length = 0;
 
-            that.map.setCenter(that.coordsInfoWindows[i].position);
+              for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
+                that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
+                that.markerIds.push(tempCoordsArr[j].__id);
+              }
+
+              that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
+            }
+          });
+        }
+        break;
+      }
+      case 'naver': {
+        naver.maps.Event.addListener(this.sourceMarker, 'click', function () {
+          that.map.setCenter(that.sourceMarker.position);
+
+          if (that.sourceInfoWindow.getMap()) {
+            that.sourceInfoWindow.close();
           } else {
-            that.markerNames.length = 0;
-            that.markerIds.length = 0;
+            that.sourceInfoWindow.open(that.map, that.sourceMarker);
+          }
 
-            for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
-              that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
-              that.markerIds.push(tempCoordsArr[j].__id);
+          if (that.closeInfoWindowAuto) {
+            for (let i = 0, len = that.coordsInfoWindows.length; i < len; i++) {
+              that.coordsInfoWindows[i].close();
             }
-
-            that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
           }
         });
+
+        for (let i = 0, len = this.coords.length; i < len; i++) {
+          naver.maps.Event.addListener(that.coordsMarkers[i], 'click', function () {
+            const tempCoordsArr = [];
+
+            for (let j = 0, len2 = that.coordsMarkers.length; j < len2; j++) {
+              if (that.coordsMarkers[i].position._lat === that.coordsMarkers[j].position._lat && that.coordsMarkers[i].position._lng === that.coordsMarkers[j].position._lng) {
+                tempCoordsArr.push(that.coordsMarkers[j]);
+              }
+            }
+
+            if (tempCoordsArr.length === 1 || typeof that.clickedNestedMarker !== 'function') {
+              if (that.closeInfoWindowAuto) {
+                that.sourceInfoWindow.close();
+
+                for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j++) {
+                  that.coordsInfoWindows[j].close();
+                }
+              }
+
+              if (that.coordsInfoWindows[i].getMap()) {
+                that.coordsInfoWindows[i].close();
+              } else {
+                that.coordsInfoWindows[i].open(that.map, that.coordsMarkers[i]);
+              }
+
+              that.map.setCenter(that.coordsInfoWindows[i].position);
+            } else {
+              that.markerNames.length = 0;
+              that.markerIds.length = 0;
+
+              for (let j = 0, len2 = tempCoordsArr.length; j < len2; j++) {
+                that.markerNames.push(`${ tempCoordsArr[j].__id }. ${ tempCoordsArr[j].__name }`);
+                that.markerIds.push(tempCoordsArr[j].__id);
+              }
+
+              that.clickedNestedMarker((userInput) => { that.selectOne(that, userInput); }, that.markerIds, that.markerNames.join('\n'));
+            }
+          });
+        }
+        break;
       }
-      break;
-    default:
-      break;
+      default: {
+        break;
+      }
     }
   }
 }

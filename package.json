@@ -1,6 +1,6 @@
 {
   "name": "easy-map",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "This is a open source project to represent map in your web page easily.",
   "main": "index.js",
   "scripts": {
