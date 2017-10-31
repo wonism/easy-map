@@ -1,6 +1,5 @@
 /**
  * title   : Easy Map JS
- * version : 1.0.4
  * author  : Jaewon <yocee57@gmail.com>
  * license : MIT
  * blog    : https://wonism.github.io
