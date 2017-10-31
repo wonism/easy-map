@@ -29,7 +29,7 @@ $ npm i easy-map
 ## Demo
 ```sh
 $ npm run demo
-# then access http://localhost:8888
+# then access http://localhost:7777
 ```
 
 ## How to use
@@ -65,7 +65,7 @@ $ npm run demo
 | coords[n]                         | object   | Same as source |
 | closeInfoWindowAuto               | boolean  | Close automately when click a marker |
 | clickedNestedMarker               | function | Callback function when click nested markers |
-| ===                               | ===      | === |
+| -                                 | -        | - |
 | coords[n].infoWindow.content      | string   | If you write {{distance m}}, you can get the distance between coores[n] and source<br />Available unites : [`m`, `km`, `ft`, `yd`] |
 
 ### Basic Usage
@@ -79,27 +79,24 @@ const easyMap = new EasyMap({
     lat: 37.5666103,
     lng: 126.9783882,
     marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 48, height: 48, verticalAlign: 'top' },
-    infoWindow: { content: '<div class="info-window">Source Marker</div>', maxWidth: 50 }
+    infoWindow: { content: '<div class="info-window">Source Marker</div>', maxWidth: 50 },
   },
-  coords: [
-    {
-      lat: 37.5658528,
-      lng: 126.9779845,
-      name: 'Marker 1',
-      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
-      infoWindow: { content: '<div class="info-window">Marker 1<br>distance is {{distance m}}</div>', maxWidth: 50 }
-    },
-    {
-      lat: 37.5658528,
-      lng: 126.9779845,
-      name: 'Marker 2',
-      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
-      infoWindow: { content: '<div class="info-window">Marker 2<br>distance is {{distance km}}</div>', maxWidth: 50 }
-    },
-  ],
+  coords: [{
+    lat: 37.5658528,
+    lng: 126.9779845,
+    name: 'Marker 1',
+    marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+    infoWindow: { content: '<div class="info-window">Marker 1<br>distance is {{distance m}}</div>', maxWidth: 50 },
+  }, {
+    lat: 37.5658528,
+    lng: 126.9779845,
+    name: 'Marker 2',
+    marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+    infoWindow: { content: '<div class="info-window">Marker 2<br>distance is {{distance km}}</div>', maxWidth: 50 },
+  }],
   closeInfoWindowAuto: true,
-  clickedNestedMarker: function (cb, ids, strs) {
-    let userInput = prompt(`You clicked nested markers! Select on.\n${ strs }`, '');
+  clickedNestedMarker: (cb, ids, strs) => {
+    const userInput = prompt(`You clicked nested markers! Select on.\n${strs}`, '');
 
     cb(+userInput);
   },
@@ -118,27 +115,24 @@ const easyMap = new EasyMap({
     lat: 37.5666103,
     lng: 126.9783882,
     marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 48, height: 48, verticalAlign: 'top' },
-    infoWindow: { content: '<div class="info-window">Source Marker</div>', maxWidth: 50 }
+    infoWindow: { content: '<div class="info-window">Source Marker</div>', maxWidth: 50 },
   },
-  coords: [
-    {
-      lat: 37.5658528,
-      lng: 126.9779845,
-      name: 'Marker 1',
-      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
-      infoWindow: { content: '<div class="info-window">Marker 1<br>distance is {{distance m}}</div>', maxWidth: 50 }
-    },
-    {
-      lat: 37.5658528,
-      lng: 126.9779845,
-      name: 'Marker 2',
-      marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
-      infoWindow: { content: '<div class="info-window">Marker 2<br>distance is {{distance km}}</div>', maxWidth: 50 }
-    },
-  ],
+  coords: [{
+    lat: 37.5658528,
+    lng: 126.9779845,
+    name: 'Marker 1',
+    marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+    infoWindow: { content: '<div class="info-window">Marker 1<br>distance is {{distance m}}</div>', maxWidth: 50 },
+  }, {
+    lat: 37.5658528,
+    lng: 126.9779845,
+    name: 'Marker 2',
+    marker: { icon: '//assets-cdn.github.com/images/modules/contact/heartocat.png', width: 36, height: 36, verticalAlign: 'middle' },
+    infoWindow: { content: '<div class="info-window">Marker 2<br>distance is {{distance km}}</div>', maxWidth: 50 },
+  }],
   closeInfoWindowAuto: true,
-  clickedNestedMarker: function (cb, ids, strs) {
-    let userInput = prompt(`You clicked nested markers! Select on.\n${ strs }`, '');
+  clickedNestedMarker: (cb, ids, strs) => {
+    const userInput = prompt(`You clicked nested markers! Select on.\n${ strs }`, '');
 
     cb(+userInput);
   },
@@ -166,6 +160,9 @@ __1.0.3__
 - Bug fix
 - Change coding styles in `switch-case` (Use braces in switch-case).
 
+__1.1.0__
+- Refactoring
+
 ## Licence
 Copyright (c) 2017 wonism
 
@@ -174,4 +171,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-

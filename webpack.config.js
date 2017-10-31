@@ -1,36 +1,65 @@
-'use strict';
+const webpack = require('webpack');
+const path = require('path');
+const isProduction = process.env.NODE_ENV === 'production';
 
-var webpack = require('webpack');
-var path = require('path');
-
-module.exports = {
-  devServer: {
-    contentBase: path.join(__dirname, 'demo'),
-    inline: true,
-    port: 8888,
-    historyApiFallback: true,
-    compress: false,
-  },
+const config = {
   entry: {
-    demo: [
-      'webpack/hot/dev-server',
-      './demo/index.js'
-    ],
-  },
-  module: {
-    loaders: [{
-      loader: 'babel',
-      test: /\.js$/,
-      exclude: /(node_modules|bower_components)/
-    }],
-  },
-  resolve: {
-    extensions: ['', '.js'],
+		"easy-map": isProduction ? path.resolve('./src/index.js') : path.resolve('./demo/index.js'),
+	},
+  devServer: {
+    contentBase: path.resolve('./demo'),
+    inline: true,
+    hot: true,
+    host: '0.0.0.0',
+    port: 7777,
+    historyApiFallback: true,
   },
   output: {
-    path: path.join(__dirname, 'demo'),
-    filename: 'bundle.js',
-    publicPath: '/'
+    filename: '[name].min.js',
+    path: isProduction ? path.resolve('.') : path.resolve('./demo'),
+  },
+  resolve: {
+    extensions: ['.js'],
+    modules: [
+      'node_modules',
+      path.resolve('./src'),
+    ],
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        NODE_ENV: JSON.stringify(isProduction ? 'production' : 'development'),
+      },
+    }),
+  ],
+  module: {
+    loaders: [{
+			enforce: 'pre',
+			test: /\.js$/,
+			loader: 'eslint-loader',
+			include: path.resolve('./src'),
+			options: {
+				failOnWarning: true,
+				failOnError: true,
+				emitWarning: true,
+			},
+		}, {
+			test: /\.js$/,
+			use: 'babel-loader',
+			exclude: /node_modules|bower_components/,
+		}],
+  },
+  externals: {
+    google: 'google',
+    naver: 'naver',
   },
 };
 
+if (!isProduction) {
+  config.devtool = 'eval-source-map';
+  config.plugins.push(
+    new webpack.HotModuleReplacementPlugin()
+  );
+}
+
+module.exports = config;

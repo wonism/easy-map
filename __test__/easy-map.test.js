@@ -1,4 +1,4 @@
-require('../src/easy-map.js');
+import EasyMap from '../src';
 
 const optionsForGoogle = {
   mapType: 'google',
@@ -36,7 +36,7 @@ test('Create instance (google)', () => {
 });
 
 test('Get distance between 2 points. (google)', () => {
-  expect(easyMapGoogle.getDistance(easyMapGoogle.source, easyMapGoogle.coords[0])).toBeTruthy();
+  expect(EasyMap.getDistance(easyMapGoogle.source, easyMapGoogle.coords[0])).toBeTruthy();
 });
 
 const optionsForNaver = {
@@ -74,10 +74,9 @@ test('Create instance (naver)', () => {
 });
 
 test('Get distance between 2 points. (naver)', () => {
-  expect(easyMapNaver.getDistance(easyMapNaver.source, easyMapNaver.coords[0])).toBeTruthy();
+  expect(EasyMap.getDistance(easyMapNaver.source, easyMapNaver.coords[0])).toBeTruthy();
 });
 
 function capitalize(str) {
   return str.replace(/\b\w/g, l => l.toUpperCase());
 }
-

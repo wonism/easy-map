@@ -1,3 +1,14 @@
 {
-  "presets": ["es2015", "stage-1"],
+  "plugins": [
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": false,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }],
+    ["transform-object-rest-spread", {
+      "useBuiltIns": true
+    }]
+  ],
+  "presets": ["env"],
 }
