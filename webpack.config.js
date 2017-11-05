@@ -17,6 +17,8 @@ const config = {
   output: {
     filename: '[name].min.js',
     path: isProduction ? path.resolve('.') : path.resolve('./demo'),
+    library: 'EasyMap',
+    libraryTarget: 'commonjs2'
   },
   resolve: {
     extensions: ['.js'],

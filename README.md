@@ -163,6 +163,9 @@ __1.0.3__
 __1.1.0__
 - Refactoring
 
+__1.1.2__
+- Re-configure Webpack
+
 ## Licence
 Copyright (c) 2017 wonism
 
