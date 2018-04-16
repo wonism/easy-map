@@ -29,7 +29,7 @@ $ npm i easy-map
 ## Demo
 ```sh
 $ npm run demo
-# then access http://localhost:7777
+# then access http://127.0.0.1:7777
 ```
 
 ## How to use
@@ -55,6 +55,7 @@ $ npm run demo
 | source.infoWindow                 | object   | Marker's infoWindow |
 | source.infoWindow.content         | string   | infoWindow's content |
 | source.infoWindow.maxWidth        | number   | infoWindow's max width (px) |
+| source.infoWindow.isOpen          | boolean  | initial open status of source's infoWindow |
 | source.infoWindow.backgroundColor | string   | infoWindow's background color (`hex code` or `color name`)<br />*ONLY FOR NAVER* |
 | source.infoWindow.borderColor     | string   | infoWindow's border color (`hex code` or `color name`)<br />*ONLY FOR NAVER* |
 | source.infoWindow.borderWidth     | number   | infoWindow's border width (px)<br />*ONLY FOR NAVER* |
@@ -165,6 +166,9 @@ __1.1.0__
 
 __1.1.2__
 - Re-configure Webpack
+
+__1.1.4__
+- Add daum map
 
 ## Licence
 Copyright (c) 2017 wonism

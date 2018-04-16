@@ -17,8 +17,9 @@ const config = {
   output: {
     filename: '[name].min.js',
     path: isProduction ? path.resolve('.') : path.resolve('./demo'),
+    publicPath: '/',
     library: 'EasyMap',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'umd',
   },
   resolve: {
     extensions: ['.js'],
@@ -54,6 +55,7 @@ const config = {
   externals: {
     google: 'google',
     naver: 'naver',
+    daum: 'daum',
   },
 };
 

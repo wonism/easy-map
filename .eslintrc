@@ -8,7 +8,7 @@
   },
   "rules": {
     "no-underscore-dangle": "off",
-    "object-curly-newline": ["error", { "multiline": true }],
+    "object-curly-newline": ["error", { "consistent": true }],
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",

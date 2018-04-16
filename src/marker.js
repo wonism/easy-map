@@ -1,5 +1,5 @@
 import fp from 'lodash/fp';
-import { GOOGLE, NAVER } from './constants';
+import { GOOGLE, NAVER, DAUM } from './constants';
 
 export const createMarkersWithIcon = {
   [GOOGLE]: (that, coord, markerPosition, width, height) => {
@@ -44,19 +44,56 @@ export const createMarkersWithIcon = {
       },
     });
   },
+  [DAUM]: (that, coord, markerPosition, width, height) => {
+    if (fp.isEmpty(markerPosition)) {
+      const marker = new window.daum.maps.Marker({
+        position: new window.daum.maps.LatLng(coord.lat, coord.lng),
+        image: new window.daum.maps.MarkerImage(
+          coord.marker.icon,
+          new window.daum.maps.Size(width, height)
+        ),
+      });
+
+      marker.setMap(that.map);
+
+      return marker;
+    }
+
+    const marker = new window.daum.maps.Marker({
+      position: new window.daum.maps.LatLng(coord.lat, coord.lng),
+      image: new window.daum.maps.MarkerImage(
+        coord.marker.icon,
+        new window.daum.maps.Size(width, height),
+        { offset: new window.daum.maps.Point(markerPosition.x, markerPosition.y) }
+      ),
+    });
+
+    marker.setMap(that.map);
+
+    return marker;
+  },
 };
 
 export const createMarkersWithoutIcon = {
-  [GOOGLE]: (that, coord) => (
+  [GOOGLE]: (that, coord) =>
     new window.google.maps.Marker({
       position: coord,
       map: that.map,
-    })),
-  [NAVER]: (that, coord) => (
+    }),
+  [NAVER]: (that, coord) =>
     new window.naver.maps.Marker({
       position: coord,
       map: that.map,
-    })),
+    }),
+  [DAUM]: (that, coord) => {
+    const marker = new window.daum.maps.Marker({
+      position: new window.daum.maps.LatLng(coord.lat, coord.lng),
+    });
+
+    marker.setMap(that.map);
+
+    return marker;
+  },
 };
 
 export const markCurrentPositionWithIcon = {
@@ -102,6 +139,34 @@ export const markCurrentPositionWithIcon = {
       },
     });
   },
+  [DAUM]: (that, markerPosition, width, height) => {
+    if (fp.isEmpty(markerPosition)) {
+      const marker = new window.daum.maps.Marker({
+        position: new window.daum.maps.LatLng(that.source.lat, that.source.lng),
+        image: new window.daum.maps.MarkerImage(
+          that.source.marker.icon,
+          new window.daum.maps.Size(width, height)
+        ),
+      });
+
+      marker.setMap(that.map);
+
+      return marker;
+    }
+
+    const marker = new window.daum.maps.Marker({
+      position: new window.daum.maps.LatLng(that.source.lat, that.source.lng),
+      image: new window.daum.maps.MarkerImage(
+        that.source.marker.icon,
+        new window.daum.maps.Size(width, height),
+        { offset: new window.daum.maps.Point(markerPosition.x, markerPosition.y) }
+      ),
+    });
+
+    marker.setMap(that.map);
+
+    return marker;
+  },
 };
 
 export const markCurrentPositionWithoutIcon = {
@@ -117,4 +182,13 @@ export const markCurrentPositionWithoutIcon = {
       map: that.map,
     })
   ),
+  [DAUM]: (that) => {
+    const marker = new window.daum.maps.Marker({
+      position: new window.daum.maps.LatLng(that.source.lat, that.source.lng),
+    });
+
+    marker.setMap(that.map);
+
+    return marker;
+  },
 };

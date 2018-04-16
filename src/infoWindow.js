@@ -1,5 +1,5 @@
 import fp from 'lodash/fp';
-import { GOOGLE, NAVER } from './constants';
+import { GOOGLE, NAVER, DAUM } from './constants';
 
 const replaceContent = (that, i) => fp.flow(
   fp.replace(/\{{2}distance\s?km\}{2}/gi, `${that.coordsMarkers[i].__distance / 1000}km`),
@@ -27,17 +27,57 @@ export const createMarkerInfoWindow = {
       content: infoWindowContent,
     });
   },
+  [DAUM]: (that, infoWindow, i) => {
+    const { content } = infoWindow;
+    const infoWindowContent = replaceContent(that, i)(content);
+
+    return new window.daum.maps.InfoWindow({
+      ...infoWindow,
+      content: infoWindowContent,
+    });
+  },
 };
 
 export const makeInfoWindow = {
-  [GOOGLE]: infoWindow => new window.google.maps.InfoWindow({
-    ...infoWindow,
-    content: infoWindow.content || '',
-  }),
-  [NAVER]: infoWindow => new window.naver.maps.InfoWindow({
-    ...infoWindow,
-    content: infoWindow.content || '',
-  }),
+  [GOOGLE]: (infoWindow, that) => {
+    const { isOpen } = infoWindow;
+    const iw = new window.google.maps.InfoWindow({
+      ...infoWindow,
+      content: infoWindow.content || '',
+    });
+
+    if (isOpen) {
+      iw.open(that.map, that.sourceMarker);
+    }
+
+    return iw;
+  },
+  [NAVER]: (infoWindow, that) => {
+    const { isOpen } = infoWindow;
+    const iw = new window.naver.maps.InfoWindow({
+      ...infoWindow,
+      content: infoWindow.content || '',
+    });
+
+    if (isOpen) {
+      iw.open(that.map, that.sourceMarker);
+    }
+
+    return iw;
+  },
+  [DAUM]: (infoWindow, that) => {
+    const { isOpen } = infoWindow;
+    const iw = new window.daum.maps.InfoWindow({
+      ...infoWindow,
+      content: infoWindow.content || '',
+    });
+
+    if (isOpen) {
+      iw.open(that.map, that.sourceMarker);
+    }
+
+    return iw;
+  },
 };
 
 export const infoWindowCallback = {
@@ -157,6 +197,67 @@ export const infoWindowCallback = {
           );
         }
       });
+    }
+  },
+  [DAUM]: (that, EasyMap) => {
+    window.daum.maps.event.addListener(that.sourceMarker, 'click', function f() {
+      const { lat, lng } = that.source;
+      const center = new window.daum.maps.LatLng(lat, lng);
+
+      that.map.setCenter(center);
+      that.sourceInfoWindow.open(that.map, this);
+
+      if (that.closeInfoWindowAuto) {
+        for (let i = 0, len = that.coordsInfoWindows.length; i < len; i += 1) {
+          that.coordsInfoWindows[i].close();
+        }
+      }
+    });
+
+    for (let i = 0, len = that.coords.length; i < len; i += 1) {
+      window.daum.maps.event.addListener(that.coordsMarkers[i], 'click', (index =>
+        () => {
+          const tempCoordsArr = [];
+
+          for (let j = 0, len2 = that.coords.length; j < len2; j += 1) {
+            if (that.coords[index].lat === that.coords[j].lat &&
+                that.coords[index].lng === that.coords[j].lng) {
+              tempCoordsArr.push(that.coordsMarkers[j]);
+            }
+          }
+
+          if (tempCoordsArr.length === 1 || !fp.isFunction(that.clickedNestedMarker)) {
+            if (that.closeInfoWindowAuto) {
+              that.sourceInfoWindow.close();
+
+              for (let j = 0, len2 = that.coordsInfoWindows.length; j < len2; j += 1) {
+                that.coordsInfoWindows[j].close();
+              }
+            }
+
+            const { lat, lng } = that.coords[index];
+            const center = new window.daum.maps.LatLng(lat, lng);
+
+            that.map.setCenter(center);
+            that.coordsInfoWindows[index].open(that.map, that.coordsMarkers[index]);
+          } else {
+            that.markers.length = 0;
+
+            for (let j = 0, len2 = tempCoordsArr.length; j < len2; j += 1) {
+              that.markers.push({
+                markerId: tempCoordsArr[j].__id,
+                markerName: `${tempCoordsArr[j].__id}. ${tempCoordsArr[j].__name}`,
+              });
+            }
+
+            that.clickedNestedMarker(
+              (userInput) => { EasyMap.selectOne(that, userInput); },
+              fp.map(({ markerId }) => markerId)(that.markers),
+              fp.map(({ markerName }) => markerName)(that.markers).join('\n'),
+            );
+          }
+        }
+      )(i));
     }
   },
 };

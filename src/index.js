@@ -134,6 +134,10 @@ export default class EasyMap {
     return new window.naver.maps.Map(this.element, option);
   }
 
+  initDaumOption(option) {
+    return new window.daum.maps.Map(this.element, option);
+  }
+
   markCurrentPosition() {
     const { marker, infoWindow } = this.source;
 
@@ -167,7 +171,7 @@ export default class EasyMap {
     }
 
     if (infoWindow && fp.isFunction(makeInfoWindow[this.mapType])) {
-      this.sourceInfoWindow = makeInfoWindow[this.mapType](infoWindow);
+      this.sourceInfoWindow = makeInfoWindow[this.mapType](infoWindow, this);
     }
   }
 

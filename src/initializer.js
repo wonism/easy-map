@@ -1,5 +1,5 @@
 import fp from 'lodash/fp';
-import { GOOGLE, NAVER } from './constants';
+import { GOOGLE, NAVER, DAUM } from './constants';
 
 export default {
   [GOOGLE]: (t) => {
@@ -36,6 +36,30 @@ export default {
       }))(t);
 
       that.renderMap();
+    };
+
+    document.body.appendChild(script);
+  },
+  [DAUM]: (t) => {
+    const script = document.createElement('script');
+
+    script.type = 'text/javascript';
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${t.key}&autoload=false`;
+    script.onload = () => {
+      window.daum.maps.load(function loadCallback() {
+        const option = t.option || {
+          center: t.source,
+        };
+
+        const { center } = option;
+        const { lat, lng } = center;
+        const centerCoord = new window.daum.maps.LatLng(lat, lng);
+        const newOption = fp.set('center', centerCoord)(option);
+
+        const that = fp.set('map', t.initDaumOption(newOption))(t);
+
+        that.renderMap();
+      });
     };
 
     document.body.appendChild(script);
