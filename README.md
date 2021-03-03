@@ -28,7 +28,7 @@ $ npm i easy-map
 
 ## Demo
 ```sh
-$ npm run demo
+$ npm run dev
 # then access http://127.0.0.1:7777
 ```
 
